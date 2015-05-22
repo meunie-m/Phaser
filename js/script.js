@@ -8,6 +8,7 @@ window.onload = function() {
 	var scoreString = '';
 	var scoreText;
 	var rond;
+	var music;
 	var MyGame = {};
 
 
@@ -145,6 +146,7 @@ window.onload = function() {
 		create: function(){
 
 			game.load.image('separator','images/separator.png');
+			music.stop();
 			music = game.add.audio('death');
 			music.play();
 
@@ -166,18 +168,24 @@ window.onload = function() {
 			game.load.image('logo', 'images/retrodash.png');
 			game.load.image('start', 'images/start.png');
 			game.load.image('player', 'images/player.png');
+			game.load.image('rules', 'images/rules.png');
 
 		},
 
 		create: function(){
 			logo = game.add.sprite(160, 0, 'logo');
 			start = this.game.add.button(180, 400, 'start', this.changeState, this);
+			rules = this.game.add.button(210, 500, 'rules', this.viewRules, this);
 			player = game.add.sprite(365, 925, 'player');
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			player.body.velocity.setTo(0,200);
 			player.body.gravity.set(0, 100);
 			player.body.collideWorldBounds = true;
 			player.body.bounce.set(1);
+		},
+
+		viewRules: function(){
+			this.game.state.start("Rules");
 		},
 
 		update: function(){
@@ -251,7 +259,8 @@ window.onload = function() {
 
 		create: function(){
 			game.physics.startSystem(Phaser.Physics.ARCADE);
-
+			scoreString = 'Score : ';
+			scoreText = game.add.text(0,0, scoreString + counter, {fill: '#fff'});
 			player = game.add.sprite(365, 925, 'player');
 			game.physics.enable(player, Phaser.Physics.ARCADE);
 			player.body.velocity.setTo(0,200);
@@ -275,7 +284,14 @@ window.onload = function() {
 			rond3.body.velocity.setTo(-500, 900);
 			rond3.body.gravity.set(0, 1000);
 			rond3.body.bounce.set(1);
+
+			game.time.events.add(Phaser.Timer.SECOND * 2, this.addScore, this);
 			move = game.input.keyboard.createCursorKeys();
+		},
+
+		addScore: function(){
+			counter++;
+			scoreText.text = scoreString + counter;
 		},
 
 		update: function(){
@@ -299,6 +315,28 @@ window.onload = function() {
 		killPlayer: function(player, rond){
 			player.kill();
 			this.game.state.start("GameOver");
+
+		},
+	};
+
+
+	MyGame.Rules = function(){};
+	MyGame.Rules.prototype = {
+		preload: function(){
+			game.load.image('gl', 'images/gl.png');
+			game.load.image('menu', 'images/returnmenu.png');
+		},
+
+		create: function(){
+			gl = game.add.sprite(120, 100, 'gl');
+			menu = this.game.add.button(185, 800, 'menu', this.changeState, this);
+		},
+
+		changeState: function(){
+this.game.state.start("GameMenu");
+		},
+
+		update: function(){
 
 		},
 	};
@@ -395,7 +433,7 @@ window.onload = function() {
 					player.body.gravity.set(0, 17000);
 				}
 
-				if(counter >= 105){
+				if(counter >= 135){
 					this.game.state.start("TransitionLv3");
 				}
 
@@ -433,6 +471,7 @@ window.onload = function() {
 		},
 
 	}
+	game.state.add('Rules', MyGame.Rules);
 	game.state.add('TransitionLv2', MyGame.TransitionLv2);
 	game.state.add('TransitionLv3', MyGame.TransitionLv3);
 	game.state.add('thirdLevel', MyGame.thirdLevel);
@@ -440,6 +479,6 @@ window.onload = function() {
 	game.state.add('GameOver', MyGame.GameOver);
 	game.state.add('SideScroll', MyGame.SideScroll);
 	game.state.add('GameMenu', MyGame.GameMenu);
-	game.state.start('thirdLevel');
+	game.state.start('GameMenu');
 }
 
