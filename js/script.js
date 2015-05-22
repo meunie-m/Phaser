@@ -1,3 +1,5 @@
+'use strict';
+
 window.onload = function() {
 
 	var game = new Phaser.Game(800, 960, Phaser.AUTO, 'game');
@@ -9,6 +11,25 @@ window.onload = function() {
 	var scoreText;
 	var rond;
 	var music;
+	var logo;
+	var start;
+	var rules;
+	var player;
+	var separator;
+	var separatory;
+	var gl;
+	var menu;
+	var move;
+	var level2;
+	var level3;
+	var playerdead;
+	var restart;
+	var gameover;
+	var play;
+	var rond;
+	var rond2;
+	var rond3;
+	var move;
 	var MyGame = {};
 
 
@@ -141,23 +162,30 @@ window.onload = function() {
 			game.load.image('gameover', 'images/gameover.png');
 			game.load.image('playerdead', 'images/playerdead.png');
 			game.load.audio('death', 'sounds/dead.wav');
+			game.load.image('restart', 'images/restart.png');
 		},
 
 		create: function(){
 
-			game.load.image('separator','images/separator.png');
+
 			music.stop();
 			music = game.add.audio('death');
 			music.play();
 
 
 			playerdead = game.add.sprite(365, 925, 'playerdead');
+			restart = this.game.add.button(180, 650, 'restart', this.changeState, this);
 			game.physics.enable(playerdead, Phaser.Physics.ARCADE);
 			playerdead.body.collideWorldBounds = true;
+			playerdead.body.velocity.y = -50;
 
 			gameover = game.add.sprite(140, 100, 'gameover');
 			scoreString = 'Final Score : ';
 			scoreText = game.add.text(280,600, scoreString + counter, {fill: '#fff'});
+		},
+
+		changeState: function(){
+			this.game.state.start("GameMenu");
 		},
 	}
 
@@ -306,9 +334,9 @@ window.onload = function() {
 					player.body.velocity.x = 600;
 				}
 
-			game.physics.arcade.collide(player, rond, this.killPlayer, null, this);
-			game.physics.arcade.collide(player, rond2, this.killPlayer, null, this);
-			game.physics.arcade.collide(player, rond3, this.killPlayer, null, this);
+				game.physics.arcade.collide(player, rond, this.killPlayer, null, this);
+				game.physics.arcade.collide(player, rond2, this.killPlayer, null, this);
+				game.physics.arcade.collide(player, rond3, this.killPlayer, null, this);
 			}
 		},
 
@@ -333,7 +361,7 @@ window.onload = function() {
 		},
 
 		changeState: function(){
-this.game.state.start("GameMenu");
+			this.game.state.start("GameMenu");
 		},
 
 		update: function(){
