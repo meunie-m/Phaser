@@ -184,6 +184,10 @@ window.onload = function() {
 			scoreText = game.add.text(280,600, scoreString + counter, {fill: '#fff'});
 		},
 
+		update: function(){
+			counter = 0;
+		},
+
 		changeState: function(){
 			this.game.state.start("GameMenu");
 		},
@@ -457,6 +461,7 @@ window.onload = function() {
 				}else if(move.right.isDown){
 					player.body.velocity.x = 600;
 				}else if(move.up.isDown && player.position.y == 925){
+					
 					player.body.velocity.y = -5000;
 					player.body.gravity.set(0, 17000);
 				}
